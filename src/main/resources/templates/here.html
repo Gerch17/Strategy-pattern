@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+   <!-- <script src="C:\Users\tambovcevgo\IdeaProjects\GanttDiagram\src\main\resources\templates\gantt-master\codebase\sources\dhtmlxgantt.js" ></script>
+    <link rel="stylesheet" href="C:\Users\tambovcevgo\IdeaProjects\GanttDiagram\src\main\resources\templates\gantt-master\codebase\sources\dhtmlxgantt.css" type="text/css">
+    -->
+</head>
+<body>
+<div id="gantt_here" style='width:100%; height:100vh;'></div>
+<script>
+    let p;
+    doFetch();
+    console.log(p);
+
+    //http://redmine.dafr.loc:3002/projects/aml-antifraud-online/issues.json
+    //let url = 'http://redmine.dafr.loc:3002/projects/traineeship/issues.json';
+    //let herejson = await fetch(url);
+
+    /*
+    gantt.config.date_format = "%Y-%m-%d %H:%i";
+    var herejson = '{"project":{"id":76,"name":"Тест проект 1","identifier":"test_project_1","description":"","homepage":"","status":1,"is_public":false,"custom_fields":[{"id":3,"name":"Тип проекта","value":"1"},{"id":10,"name":"Код проекта","value":"TP001"},{"id":28,"name":"Конечный заказчик","value":"110"}],"created_on":"2020-12-20T18:34:32Z","updated_on":"2020-12-20T18:34:32Z"}}';
+    var name_of_task = JSON.parse(herejson).project[0].name;
+    var starting_date = JSON.parse(herejson).project[0].created_on;
+    var durating = 5;
+    var progresses = 0;
+    var tasks = {data:[
+            {id: 1, text: "Project #1", start_date: null, duration: null, parent:0, progress: 0, open: true},
+            {id: 2, text: name_of_task, start_date: starting_date, duration: durating, parent: 1, progress: progresses}
+        ],
+        links:[
+            {id: 1, source: 1, target: 2, type:"0"}
+        ]};
+    gantt.init("gantt_here");
+    gantt.parse(tasks);
+*/
+
+    function doFetch(ev){
+        let url = "https://cors-anywhere.herokuapp.com/http://redmine.dafr.loc:3002/projects/aml-antifraud-online/issues.json";
+        let h = new Headers();
+        //h.append("Access-Controll-Allow-Origin", "*");
+        h.append('Accept', 'application/json');
+        let encoded = window.btoa('tambovcevgo:German789))');
+        let auth = 'Basic' + encoded;
+        h.append('Authorization', auth );
+        console.log(auth);
+        let req = new Request(url, {
+            method: 'GET',
+            headers: h,
+            credentials: 'same-origin'
+        });
+
+        fetch(req)
+        .then((response)=>{
+            if(response.ok){
+                return response.json();
+            }else{
+                console.log('Error');
+            }
+        })
+        .then((jsonData) =>{
+            console.log(jsonData);
+            p.textContent = JSON.stringify(jsonData, null, 4);
+        })
+        .catch((err)=>{
+            console.log('Last error');
+        })
+    }
+</script>
+<button type="button" onclick="clicker()">click, to get array</button>
+</body>
+</html>
+
+<!--
+    var tasks = {data: [
+            {id: 1, text: "Project #1", start_date: null, duration: null, parent:0, progress: 0, open: true},
+            {id: 2, text: "Task #1", start_date: "2019-08-01 00:00", duration:5, parent:1, progress: 1},
+            {id: 3, text: "Task #2", start_date: "2019-08-06 00:00", duration:2, parent:1, progress: 0.5},
+            {id: 4, text: "Task #3", start_date: null, duration: null, parent:1, progress: 0.8, open: true},
+            {id: 5, text: "Task #3.1", start_date: "2019-08-09 00:00", duration:2, parent:4, progress: 0.2},
+            {id: 6, text: "Task #3.2", start_date: "2019-08-11 00:00", duration:1, parent:4, progress: 0}
+        ],
+        links:[
+            {id:1, source:2, target:3, type:"0"},
+            {id:2, source:3, target:4, type:"0"},
+            {id:3, source:5, target:6, type:"0"}
+        ]};
+-->
